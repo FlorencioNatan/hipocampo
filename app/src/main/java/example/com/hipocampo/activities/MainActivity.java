@@ -16,9 +16,14 @@ import android.view.MenuItem;
 
 import example.com.hipocampo.R;
 import example.com.hipocampo.dialogs.MasterPasswordDialog;
+import example.com.hipocampo.fragments.PasswordFragment;
+import example.com.hipocampo.fragments.dummy.DummyContent;
+import example.com.hipocampo.model.Password;
+import example.com.hipocampo.util.FileManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        PasswordFragment.OnListFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +36,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
 
@@ -94,5 +98,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(Password item) {
+
     }
 }

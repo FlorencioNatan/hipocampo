@@ -53,6 +53,7 @@ public class FileManager {
     public void appendData(String data){
         try {
             FileOutputStream fos = new FileOutputStream(file.getPath(),true);
+            data += "\n";
             fos.write(data.getBytes("UTF-8"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();

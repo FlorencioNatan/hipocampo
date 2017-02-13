@@ -12,9 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import example.com.hipocampo.R;
-import example.com.hipocampo.fragments.dummy.DummyContent;
 import example.com.hipocampo.model.Password;
+import example.com.hipocampo.util.FileManager;
 
 /**
  * A fragment representing a list of Items.
@@ -81,7 +86,17 @@ public class PasswordListFragment extends Fragment {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+        FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+        String fileContent = fileManager.readFile();
+        if (fileContent != "") {
+            String jsonObject[] = fileContent.split("\n");
+            Gson gson = new Gson();
+            List<Password> items = new ArrayList<Password>();
+            for (int i = 0; i < jsonObject.length; i++) {
+                items.add(gson.fromJson(jsonObject[i], Password.class));
+            }
+            recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(items, mListener));
+        }
 
         return view;
     }

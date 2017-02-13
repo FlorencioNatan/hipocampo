@@ -7,8 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.gson.Gson;
 
 import example.com.hipocampo.R;
+import example.com.hipocampo.model.Password;
+import example.com.hipocampo.util.FileManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +25,11 @@ import example.com.hipocampo.R;
  * create an instance of this fragment.
  */
 public class PasswordFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText description;
+    private EditText username;
+    private EditText password;
+    private EditText observation;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,16 +41,12 @@ public class PasswordFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment PasswordFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PasswordFragment newInstance(String param1, String param2) {
+    public static PasswordFragment newInstance() {
         PasswordFragment fragment = new PasswordFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,17 +54,41 @@ public class PasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_password, container, false);
+        View view = inflater.inflate(R.layout.fragment_password, container, false);
+        description = (EditText) view.findViewById(R.id.description);
+        username = (EditText) view.findViewById(R.id.username);
+        password = (EditText) view.findViewById(R.id.password);
+        observation = (EditText) view.findViewById(R.id.observation);
+
+        Button btsave = (Button) view.findViewById(R.id.save);
+        btsave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Gson gson = new Gson();
+                if (validateFields()) {
+                    String json = gson.toJson(new Password(description.getText().toString(),
+                            username.getText().toString(),
+                            password.getText().toString(),
+                            observation.getText().toString()));
+                    FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+                    fileManager.appendData(json);
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
+        return view;
+    }
+
+    private boolean validateFields(){
+        return !description.getText().toString().isEmpty() &&
+                !username.getText().toString().isEmpty() &&
+                !password.getText().toString().isEmpty() &&
+                !observation.getText().toString().isEmpty();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

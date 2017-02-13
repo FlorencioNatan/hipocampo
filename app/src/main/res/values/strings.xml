@@ -10,5 +10,12 @@
     <string name="master_password_dialog_title">Senha Mestre</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
+    <string name="description">Descrição</string>
+    <string name="username">Usuário</string>
+    <string name="password">Senha</string>
+    <string name="observation">Observação</string>
+    <string name="show">Mostrar</string>
+    <string name="hide">Ocultar</string>
+    <string name="save">Salvar</string>
 
 </resources>

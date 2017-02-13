@@ -12,7 +12,7 @@ import android.text.InputType;
 import android.widget.EditText;
 
 import example.com.hipocampo.R;
-import example.com.hipocampo.fragments.PasswordFragment;
+import example.com.hipocampo.fragments.PasswordListFragment;
 
 /**
  * Created by florencio on 11/02/17.
@@ -31,9 +31,11 @@ public class MasterPasswordDialog extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Fragment fragment = PasswordFragment.newInstance(1);
+                Fragment fragment = PasswordListFragment.newInstance(1);
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_main, fragment)
+                        .addToBackStack("").commit();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

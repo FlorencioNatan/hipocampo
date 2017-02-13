@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import example.com.hipocampo.R;
-import example.com.hipocampo.fragments.PasswordFragment.OnListFragmentInteractionListener;
+import example.com.hipocampo.fragments.PasswordListFragment.OnListFragmentInteractionListener;
 import example.com.hipocampo.model.Password;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class MyPasswordRecyclerViewAdapter extends RecyclerView.Adapter<MyPasswo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_password, parent, false);
+                .inflate(R.layout.fragment_password_show, parent, false);
         return new ViewHolder(view);
     }
 

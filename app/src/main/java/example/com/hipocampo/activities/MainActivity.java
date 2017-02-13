@@ -1,5 +1,6 @@
 package example.com.hipocampo.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -14,13 +15,13 @@ import android.view.MenuItem;
 import example.com.hipocampo.R;
 import example.com.hipocampo.dialogs.MasterPasswordDialog;
 import example.com.hipocampo.fragments.PasswordFragment;
-import example.com.hipocampo.fragments.dummy.DummyContent;
+import example.com.hipocampo.fragments.PasswordListFragment;
 import example.com.hipocampo.model.Password;
-import example.com.hipocampo.util.FileManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        PasswordFragment.OnListFragmentInteractionListener{
+        PasswordListFragment.OnListFragmentInteractionListener,
+        PasswordFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Password item) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }

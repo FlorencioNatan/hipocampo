@@ -20,6 +20,7 @@ import java.util.List;
 import example.com.hipocampo.R;
 import example.com.hipocampo.model.Password;
 import example.com.hipocampo.util.FileManager;
+import example.com.hipocampo.util.PasswordSingleton;
 
 /**
  * A fragment representing a list of Items.
@@ -95,6 +96,7 @@ public class PasswordListFragment extends Fragment {
             for (int i = 0; i < jsonObject.length; i++) {
                 items.add(gson.fromJson(jsonObject[i], Password.class));
             }
+            PasswordSingleton.getInstance().setPasswordList(items);
             recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(items, mListener));
         }
 
@@ -131,6 +133,6 @@ public class PasswordListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Password item);
+        void onListFragmentInteraction(int id);
     }
 }

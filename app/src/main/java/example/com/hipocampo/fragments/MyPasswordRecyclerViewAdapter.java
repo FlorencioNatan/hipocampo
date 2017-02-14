@@ -35,7 +35,7 @@ public class MyPasswordRecyclerViewAdapter extends RecyclerView.Adapter<MyPasswo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mDescriptionView.setText(mValues.get(position).getDescription());
         holder.mUserNameView.setText(mValues.get(position).getUsername());
@@ -46,7 +46,7 @@ public class MyPasswordRecyclerViewAdapter extends RecyclerView.Adapter<MyPasswo
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(position);
                 }
             }
         });

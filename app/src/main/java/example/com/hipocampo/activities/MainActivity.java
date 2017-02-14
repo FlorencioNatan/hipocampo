@@ -1,7 +1,7 @@
 package example.com.hipocampo.activities;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,11 +17,12 @@ import example.com.hipocampo.dialogs.MasterPasswordDialog;
 import example.com.hipocampo.fragments.PasswordFragment;
 import example.com.hipocampo.fragments.PasswordListFragment;
 import example.com.hipocampo.model.Password;
+import example.com.hipocampo.util.FileManager;
+import example.com.hipocampo.util.PasswordSingleton;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        PasswordListFragment.OnListFragmentInteractionListener,
-        PasswordFragment.OnFragmentInteractionListener {
+        PasswordListFragment.OnListFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +92,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Password item) {
-
+    public void onListFragmentInteraction(int id) {
+        Fragment fragment = PasswordFragment.newInstance(id);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .addToBackStack("").commit();
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

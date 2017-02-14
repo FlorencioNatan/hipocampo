@@ -9,29 +9,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 
 import example.com.hipocampo.R;
 import example.com.hipocampo.model.Password;
 import example.com.hipocampo.util.FileManager;
+import example.com.hipocampo.util.PasswordSingleton;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PasswordFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link PasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class PasswordFragment extends Fragment {
 
+    private Password model = null;
     private EditText description;
     private EditText username;
     private EditText password;
     private EditText observation;
-
-    private OnFragmentInteractionListener mListener;
 
     public PasswordFragment() {
         // Required empty public constructor
@@ -44,10 +44,11 @@ public class PasswordFragment extends Fragment {
      * @return A new instance of fragment PasswordFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PasswordFragment newInstance() {
+    public static PasswordFragment newInstance(int id) {
         PasswordFragment fragment = new PasswordFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.model = PasswordSingleton.getInstance().getPasswordList().get(id);
         return fragment;
     }
 
@@ -60,28 +61,76 @@ public class PasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_password, container, false);
+        if (model == null)
+            setupUiInsert(view);
+        else
+            setupUiEdit(view);
+        return view;
+    }
+
+    private void setupUiInsert(View view){
         description = (EditText) view.findViewById(R.id.description);
         username = (EditText) view.findViewById(R.id.username);
         password = (EditText) view.findViewById(R.id.password);
         observation = (EditText) view.findViewById(R.id.observation);
 
-        Button btsave = (Button) view.findViewById(R.id.save);
-        btsave.setOnClickListener(new View.OnClickListener() {
+        Button btSave = (Button) view.findViewById(R.id.save);
+        btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Gson gson = new Gson();
-                if (validateFields()) {
-                    String json = gson.toJson(new Password(description.getText().toString(),
-                            username.getText().toString(),
-                            password.getText().toString(),
-                            observation.getText().toString()));
-                    FileManager fileManager = new FileManager(getContext(), "senhas.txt");
-                    fileManager.appendData(json);
-                    getFragmentManager().popBackStack();
-                }
+                insertClick();
             }
         });
-        return view;
+    }
+
+    private void setupUiEdit(View view){
+        description = (EditText) view.findViewById(R.id.description);
+        username = (EditText) view.findViewById(R.id.username);
+        password = (EditText) view.findViewById(R.id.password);
+        observation = (EditText) view.findViewById(R.id.observation);
+
+        description.setText(model.getDescription());
+        username.setText(model.getUsername());
+        password.setText(model.getPassword());
+        observation.setText(model.getObservation());
+
+        Button btSave = (Button) view.findViewById(R.id.save);
+        btSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editClick();
+            }
+        });
+
+        Button btDelete = (Button) view.findViewById(R.id.delete);
+        btDelete.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+        btSave.setLayoutParams(param);
+    }
+
+    private void insertClick(){
+        if (validateFields()) {
+            Gson gson = new Gson();
+            String json = gson.toJson(new Password(description.getText().toString(),
+                    username.getText().toString(),
+                    password.getText().toString(),
+                    observation.getText().toString()));
+            FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+            fileManager.appendData(json);
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    private void editClick(){
+        model.setDescription(description.getText().toString());
+        model.setUsername(username.getText().toString());
+        model.setPassword(password.getText().toString());
+        model.setObservation(observation.getText().toString());
+        FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+        fileManager.writeFile(PasswordSingleton.getInstance().toString());
+        getFragmentManager().popBackStack();
     }
 
     private boolean validateFields(){
@@ -91,42 +140,4 @@ public class PasswordFragment extends Fragment {
                 !observation.getText().toString().isEmpty();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

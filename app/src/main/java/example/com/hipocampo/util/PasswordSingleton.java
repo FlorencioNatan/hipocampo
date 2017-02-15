@@ -14,6 +14,7 @@ public class PasswordSingleton {
 
     private static PasswordSingleton instance = new PasswordSingleton();
     private List<Password> passwords;
+    private String masterPassword;
 
     public static PasswordSingleton getInstance() {
         return instance;
@@ -25,6 +26,14 @@ public class PasswordSingleton {
 
     public List<Password> getPasswordList(){
         return passwords;
+    }
+
+    public String getMasterPassword() {
+        return masterPassword;
+    }
+
+    public void setMasterPassword(String master) {
+        this.masterPassword = master;
     }
 
     @Override

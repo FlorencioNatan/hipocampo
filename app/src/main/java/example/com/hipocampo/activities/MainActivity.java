@@ -16,9 +16,6 @@ import example.com.hipocampo.R;
 import example.com.hipocampo.dialogs.MasterPasswordDialog;
 import example.com.hipocampo.fragments.PasswordFragment;
 import example.com.hipocampo.fragments.PasswordListFragment;
-import example.com.hipocampo.model.Password;
-import example.com.hipocampo.util.FileManager;
-import example.com.hipocampo.util.PasswordSingleton;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

@@ -79,7 +79,6 @@ public class PasswordListFragment extends Fragment {
             }
         });
 
-        // Set the adapter
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_password);
         Context context = view.getContext();
         if (mColumnCount <= 1) {
@@ -98,6 +97,8 @@ public class PasswordListFragment extends Fragment {
             }
             PasswordSingleton.getInstance().setPasswordList(items);
             recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(items, mListener));
+        }else {
+            PasswordSingleton.getInstance().setPasswordList(new ArrayList<Password>());
         }
 
         return view;

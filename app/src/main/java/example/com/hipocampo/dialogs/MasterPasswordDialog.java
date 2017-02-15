@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import example.com.hipocampo.R;
 import example.com.hipocampo.fragments.PasswordListFragment;
+import example.com.hipocampo.util.PasswordSingleton;
 
 /**
  * Created by florencio on 11/02/17.
@@ -31,6 +32,7 @@ public class MasterPasswordDialog extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                PasswordSingleton.getInstance().setMasterPassword(etPassword.getText().toString());
                 Fragment fragment = PasswordListFragment.newInstance(1);
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()

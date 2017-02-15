@@ -1,7 +1,5 @@
 package example.com.hipocampo.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -113,12 +111,12 @@ public class PasswordFragment extends Fragment {
     private void insertClick(){
         if (validateFields()) {
             Gson gson = new Gson();
-            String json = gson.toJson(new Password(description.getText().toString(),
+            FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+            PasswordSingleton.getInstance().getPasswordList().add(new Password(description.getText().toString(),
                     username.getText().toString(),
                     password.getText().toString(),
                     observation.getText().toString()));
-            FileManager fileManager = new FileManager(getContext(), "senhas.txt");
-            fileManager.appendData(json);
+            fileManager.writeFile(PasswordSingleton.getInstance().toString());
             getFragmentManager().popBackStack();
         }
     }

@@ -46,7 +46,9 @@ public class FileManager {
             Cipher aesCipher = Cipher.getInstance("AES/ECB/ISO10126Padding");
             aesCipher.init(Cipher.DECRYPT_MODE, keySpec);
             byte[] plainText = aesCipher.doFinal(cipherContent);
-            return  new String(plainText, "UTF-8");
+            String decipher = new String(plainText, "UTF-8");
+            if (decipher.split("\n")[0].equals("Password File"))
+                return  decipher.substring(14);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -67,6 +69,7 @@ public class FileManager {
 
     public void writeFile(String data){
         try {
+            data = "Password File\n" + data;
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             byte[] key = messageDigest.digest(PasswordSingleton.getInstance()
                     .getMasterPassword().getBytes("UTF-8"));
@@ -94,7 +97,7 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-    
+
     public void deleteFile(){
         file.delete();
     }

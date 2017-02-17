@@ -1,6 +1,8 @@
 package example.com.hipocampo.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -99,6 +101,11 @@ public class PasswordListFragment extends Fragment {
             recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(items, mListener));
         }else {
             PasswordSingleton.getInstance().setPasswordList(new ArrayList<Password>());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.master_password_error_dialog_title);
+            builder.setMessage(R.string.master_password_error_dialog_message);
+            builder.show();
         }
 
         return view;

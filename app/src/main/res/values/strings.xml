@@ -7,6 +7,7 @@
     <string name="action_settings">Configurações</string>
     <string name="directories">Pastas</string>
     <string name="passwords">Senhas</string>
+    <string name="add_folder">Nova pasta</string>
     <string name="master_password_dialog_title">Senha Mestre</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
@@ -20,5 +21,6 @@
     <string name="delete">Deletar</string>
     <string name="master_password_error_dialog_title">Senha Incorreta</string>
     <string name="master_password_error_dialog_message">A senha informada é incorreta!</string>
+    <string name="folder_name_dialog_title">Nome da pasta</string>
 
 </resources>

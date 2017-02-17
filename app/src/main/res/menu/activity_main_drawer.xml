@@ -12,4 +12,9 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/nav_add_password"
+        android:icon="@drawable/ic_create_new_folder_black_24dp"
+        android:title="@string/add_folder" />
+
 </menu>

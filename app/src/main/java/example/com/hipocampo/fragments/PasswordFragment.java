@@ -2,12 +2,15 @@ package example.com.hipocampo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
@@ -63,6 +66,29 @@ public class PasswordFragment extends Fragment {
             setupUiInsert(view);
         else
             setupUiEdit(view);
+        ToggleButton tBPassword = (ToggleButton) view.findViewById(R.id.show_password);
+        tBPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }else {
+                    password.setInputType(InputType.TYPE_CLASS_TEXT);
+                }
+            }
+        });
+
+        ToggleButton tBObservation = (ToggleButton) view.findViewById(R.id.show_observation);
+        tBObservation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    observation.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }else {
+                    observation.setInputType(InputType.TYPE_CLASS_TEXT);
+                }
+            }
+        });
         return view;
     }
 

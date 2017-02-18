@@ -4,10 +4,6 @@
         <menu>
             <group android:checkableBehavior="single"
                 android:id="@+id/folders">
-                <item
-                    android:id="@+id/nav_password"
-                    android:icon="@drawable/ic_folder_open_black_24dp"
-                    android:title="@string/passwords" />
             </group>
         </menu>
     </item>

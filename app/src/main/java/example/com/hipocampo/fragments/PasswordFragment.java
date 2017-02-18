@@ -137,7 +137,7 @@ public class PasswordFragment extends Fragment {
     private void insertClick(){
         if (validateFields()) {
             Gson gson = new Gson();
-            FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+            FileManager fileManager = new FileManager(getContext());
             PasswordSingleton.getInstance().getPasswordList().add(new Password(description.getText().toString(),
                     username.getText().toString(),
                     password.getText().toString(),
@@ -152,7 +152,7 @@ public class PasswordFragment extends Fragment {
         model.setUsername(username.getText().toString());
         model.setPassword(password.getText().toString());
         model.setObservation(observation.getText().toString());
-        FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+        FileManager fileManager = new FileManager(getContext());
         fileManager.writeFile(PasswordSingleton.getInstance().toString());
         getFragmentManager().popBackStack();
     }

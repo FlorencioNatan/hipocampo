@@ -88,9 +88,10 @@ public class PasswordListFragment extends Fragment {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        FileManager fileManager = new FileManager(getContext(), "senhas.txt");
+        FileManager fileManager = new FileManager(getContext());
         String fileContent = fileManager.readFile();
-        if (fileContent != "") {
+        System.out.println("Content" + fileContent);
+        if (fileContent != null && !fileContent.isEmpty()) {
             String jsonObject[] = fileContent.split("\n");
             Gson gson = new Gson();
             List<Password> items = new ArrayList<Password>();
@@ -101,11 +102,12 @@ public class PasswordListFragment extends Fragment {
             recyclerView.setAdapter(new MyPasswordRecyclerViewAdapter(items, mListener));
         }else {
             PasswordSingleton.getInstance().setPasswordList(new ArrayList<Password>());
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.master_password_error_dialog_title);
-            builder.setMessage(R.string.master_password_error_dialog_message);
-            builder.show();
+            if (fileContent == null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.master_password_error_dialog_title);
+                builder.setMessage(R.string.master_password_error_dialog_message);
+                builder.show();
+            }
         }
 
         return view;

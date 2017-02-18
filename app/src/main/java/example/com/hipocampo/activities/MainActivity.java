@@ -11,15 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
+
+import java.util.ArrayList;
 
 import example.com.hipocampo.R;
+import example.com.hipocampo.dialogs.FolderNameDialog;
 import example.com.hipocampo.dialogs.MasterPasswordDialog;
 import example.com.hipocampo.fragments.PasswordFragment;
 import example.com.hipocampo.fragments.PasswordListFragment;
+import example.com.hipocampo.util.FileManager;
+import example.com.hipocampo.util.PasswordSingleton;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        PasswordListFragment.OnListFragmentInteractionListener{
+        PasswordListFragment.OnListFragmentInteractionListener,
+        FolderNameDialog.OnFolderNameDialogPositiveListener,
+        MasterPasswordDialog.OnMasterPasswordDialogListener{
+
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +44,18 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        FileManager dir = new FileManager(this);
+        ArrayList<String> list = dir.listAllFiles();
+        PasswordSingleton.getInstance().newDirectories();
+        for (String str : list){
+            MenuItem directoriesList = navigationView.getMenu().getItem(0);
+            SubMenu subMenu = directoriesList.getSubMenu();
+            subMenu.add(R.id.folders, 0, Menu.NONE, str.substring(0,str.indexOf(".key"))).
+                    setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
+            PasswordSingleton.getInstance().getDirectories().put(str.substring(0,str.indexOf(".key")), str);
+        }
     }
 
     @Override
@@ -76,12 +96,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_password) {
+        if (id == R.id.nav_add_password) {
+            FolderNameDialog dialog = new FolderNameDialog();
+            dialog.show(getSupportFragmentManager(),"Folder Name Dialog");
+        }else if (id == 0){
             FragmentManager fragmentManager = getSupportFragmentManager();
             MasterPasswordDialog dialog = new MasterPasswordDialog();
             dialog.show(fragmentManager, "Master Password Dialog");
+            PasswordSingleton.getInstance().setCurrentFolder(item.getTitle().toString());
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -97,4 +120,37 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack("").commit();
     }
 
+    @Override
+    public void onFolderNameDialogPositiveClick(String name) {
+        MenuItem folderList = navigationView.getMenu().getItem(0);
+        SubMenu subMenu = folderList.getSubMenu();
+        subMenu.add(name).setIcon(R.drawable.ic_folder_open_black_24dp);
+
+        PasswordSingleton.getInstance().setCurrentFolder(name);
+        PasswordSingleton.getInstance().getDirectories().put(name, name + ".key");
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        MasterPasswordDialog dialog = new MasterPasswordDialog();
+        dialog.show(fragmentManager, "Master Password Dialog");
+
+    }
+
+    @Override
+    public void onMasterPasswordDialogPositiveClick(String password) {
+        PasswordSingleton.getInstance().setMasterPassword(password);
+
+        FileManager file = new FileManager(this);
+        file.createFile();
+
+        Fragment fragment = PasswordListFragment.newInstance(1);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .addToBackStack("").commit();
+    }
+
+    @Override
+    public void onMasterPasswordDialogNegativeClick(String password) {
+        //TODO
+    }
 }

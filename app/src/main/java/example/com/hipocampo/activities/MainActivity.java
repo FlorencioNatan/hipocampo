@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity
         MasterPasswordDialog.OnMasterPasswordDialogListener{
 
     private NavigationView navigationView;
+    private int selectedItem = 0;
+    private int lastSelectedItem = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,11 @@ public class MainActivity extends AppCompatActivity
         FileManager dir = new FileManager(this);
         ArrayList<String> list = dir.listAllFiles();
         PasswordSingleton.getInstance().newDirectories();
+        int i = 0;
         for (String str : list){
             MenuItem directoriesList = navigationView.getMenu().getItem(0);
             SubMenu subMenu = directoriesList.getSubMenu();
-            subMenu.add(R.id.folders, 0, Menu.NONE, str.substring(0,str.indexOf(".key"))).
+            subMenu.add(R.id.folders, 0, Menu.NONE+i++, str.substring(0,str.indexOf(".key"))).
                     setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
             PasswordSingleton.getInstance().getDirectories().put(str.substring(0,str.indexOf(".key")), str);
         }
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
+        lastSelectedItem = selectedItem;
+        selectedItem = item.getOrder();
 
         if (id == R.id.nav_add_password) {
             FolderNameDialog dialog = new FolderNameDialog();
@@ -103,12 +109,12 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             MasterPasswordDialog dialog = new MasterPasswordDialog();
             dialog.show(fragmentManager, "Master Password Dialog");
-            PasswordSingleton.getInstance().setCurrentFolder(item.getTitle().toString());
+//            PasswordSingleton.getInstance().setCurrentFolder(item.getTitle().toString());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override
@@ -137,6 +143,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMasterPasswordDialogPositiveClick(String password) {
+        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
+        PasswordSingleton.getInstance().setCurrentFolder(navigationView.getMenu().getItem(0).
+                getSubMenu().getItem(selectedItem).getTitle().toString());
+
         PasswordSingleton.getInstance().setMasterPassword(password);
 
         FileManager file = new FileManager(this);
@@ -151,6 +161,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMasterPasswordDialogNegativeClick(String password) {
-        //TODO
+        selectedItem = lastSelectedItem;
+        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
     }
 }

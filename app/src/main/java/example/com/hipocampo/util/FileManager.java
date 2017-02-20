@@ -31,6 +31,7 @@ public class FileManager {
     }
 
     public String readFile(){
+        System.out.println("CurFile: " + PasswordSingleton.getInstance().getCurrentFile());
         File file = new File(context.getFilesDir(), PasswordSingleton.getInstance().getCurrentFile());
         byte[] cipherContent = new byte[(int) file.length()];
         try {

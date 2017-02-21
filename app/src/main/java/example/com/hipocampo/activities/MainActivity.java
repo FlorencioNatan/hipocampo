@@ -129,8 +129,10 @@ public class MainActivity extends AppCompatActivity
     public void onFolderNameDialogPositiveClick(String name) {
         MenuItem folderList = navigationView.getMenu().getItem(0);
         SubMenu subMenu = folderList.getSubMenu();
-        subMenu.add(name).setIcon(R.drawable.ic_folder_open_black_24dp);
-
+        subMenu.add(R.id.folders, 0, Menu.NONE+subMenu.size()-1, name).
+                setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
+        lastSelectedItem = selectedItem;
+        selectedItem = subMenu.size()-1;
         PasswordSingleton.getInstance().setCurrentFolder(name);
         PasswordSingleton.getInstance().getDirectories().put(name, name + ".key");
 

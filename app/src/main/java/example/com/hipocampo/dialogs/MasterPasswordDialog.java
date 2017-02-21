@@ -7,16 +7,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.InputType;
 import android.widget.EditText;
 
 import example.com.hipocampo.R;
 import example.com.hipocampo.activities.MainActivity;
-import example.com.hipocampo.fragments.PasswordListFragment;
-import example.com.hipocampo.util.FileManager;
-import example.com.hipocampo.util.PasswordSingleton;
 
 /**
  * Created by florencio on 11/02/17.

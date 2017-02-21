@@ -2,7 +2,6 @@ package example.com.hipocampo.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -90,7 +89,6 @@ public class PasswordListFragment extends Fragment {
         }
         FileManager fileManager = new FileManager(getContext());
         String fileContent = fileManager.readFile();
-        System.out.println("Content" + fileContent);
         if (fileContent != null && !fileContent.isEmpty()) {
             String jsonObject[] = fileContent.split("\n");
             Gson gson = new Gson();

@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             MasterPasswordDialog dialog = new MasterPasswordDialog();
             dialog.show(fragmentManager, "Master Password Dialog");
-//            PasswordSingleton.getInstance().setCurrentFolder(item.getTitle().toString());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

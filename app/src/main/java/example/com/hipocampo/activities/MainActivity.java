@@ -126,6 +126,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onWrongPassword() {
+        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
+        navigationView.getMenu().getItem(0).getSubMenu().getItem(lastSelectedItem).setChecked(false);
+    }
+
+    @Override
     public void onFolderNameDialogPositiveClick(String name) {
         MenuItem folderList = navigationView.getMenu().getItem(0);
         SubMenu subMenu = folderList.getSubMenu();

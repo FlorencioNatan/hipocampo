@@ -105,6 +105,7 @@ public class PasswordListFragment extends Fragment {
                 builder.setTitle(R.string.master_password_error_dialog_title);
                 builder.setMessage(R.string.master_password_error_dialog_message);
                 builder.show();
+                mListener.onWrongPassword();
             }
         }
 
@@ -142,5 +143,6 @@ public class PasswordListFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(int id);
+        void onWrongPassword();
     }
 }

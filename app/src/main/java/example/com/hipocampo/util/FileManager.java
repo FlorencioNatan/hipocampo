@@ -121,6 +121,11 @@ public class FileManager {
         file.delete();
     }
 
+    public void deleteFile(String name){
+        File file = new File(context.getFilesDir(), name);
+        file.delete();
+    }
+
     public void createFile(){
         File file = new File(context.getFilesDir(), PasswordSingleton.getInstance().getCurrentFile());
         try {

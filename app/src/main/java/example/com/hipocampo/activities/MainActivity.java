@@ -1,5 +1,6 @@
 package example.com.hipocampo.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,10 +52,28 @@ public class MainActivity extends AppCompatActivity
         FileManager dir = new FileManager(this);
         ArrayList<String> list = dir.listAllFiles();
         PasswordSingleton.getInstance().newDirectories();
+        MenuItem directoriesList = navigationView.getMenu().getItem(0);
+        SubMenu subMenu = directoriesList.getSubMenu();
         int i = 0;
         for (String str : list){
-            MenuItem directoriesList = navigationView.getMenu().getItem(0);
-            SubMenu subMenu = directoriesList.getSubMenu();
+            subMenu.add(R.id.folders, 0, Menu.NONE+i++, str.substring(0,str.indexOf(".key"))).
+                    setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
+            PasswordSingleton.getInstance().getDirectories().put(str.substring(0,str.indexOf(".key")), str);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FileManager dir = new FileManager(this);
+        ArrayList<String> list = dir.listAllFiles();
+        PasswordSingleton.getInstance().newDirectories();
+        MenuItem directoriesList = navigationView.getMenu().getItem(0);
+        SubMenu subMenu = directoriesList.getSubMenu();
+        subMenu.clear();
+        int i = 0;
+        for (String str : list){
             subMenu.add(R.id.folders, 0, Menu.NONE+i++, str.substring(0,str.indexOf(".key"))).
                     setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
             PasswordSingleton.getInstance().getDirectories().put(str.substring(0,str.indexOf(".key")), str);
@@ -87,6 +106,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            selectedItem = 0;
+            lastSelectedItem = 0;
+            Intent intent = new Intent(this, SettignsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -110,6 +133,8 @@ public class MainActivity extends AppCompatActivity
             MasterPasswordDialog dialog = new MasterPasswordDialog();
             dialog.show(fragmentManager, "Master Password Dialog");
         }
+
+        System.out.println();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -135,7 +160,7 @@ public class MainActivity extends AppCompatActivity
     public void onFolderNameDialogPositiveClick(String name) {
         MenuItem folderList = navigationView.getMenu().getItem(0);
         SubMenu subMenu = folderList.getSubMenu();
-        subMenu.add(R.id.folders, 0, Menu.NONE+subMenu.size()-1, name).
+        subMenu.add(R.id.folders, 0, Menu.NONE+subMenu.size(), name).
                 setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
         lastSelectedItem = selectedItem;
         selectedItem = subMenu.size()-1;
@@ -152,6 +177,9 @@ public class MainActivity extends AppCompatActivity
     public void onMasterPasswordDialogPositiveClick(String password) {
         navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
         PasswordSingleton.getInstance().setCurrentFolder(navigationView.getMenu().getItem(0).
+                getSubMenu().getItem(selectedItem).getTitle().toString());
+
+        System.out.println("Folder: " + navigationView.getMenu().getItem(0).
                 getSubMenu().getItem(selectedItem).getTitle().toString());
 
         PasswordSingleton.getInstance().setMasterPassword(password);

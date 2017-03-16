@@ -41,7 +41,12 @@ public class MasterPasswordDialog extends DialogFragment {
                 mListener.onMasterPasswordDialogNegativeClick(etPassword.getText().toString());
             }
         });
+        builder.setOnCancelListener(this);
         return builder.create();
+    }
+
+    public void onCancel(DialogInterface dialogInterface) {
+        mListener.onMasterPasswordDialogNegativeClick(etPassword.getText().toString());
     }
 
     @Override

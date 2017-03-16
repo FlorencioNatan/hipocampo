@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity
         MasterPasswordDialog.OnMasterPasswordDialogListener{
 
     private NavigationView navigationView;
-    private int selectedItem = 0;
-    private int lastSelectedItem = 0;
+    private int selectedItem = -1;
+    private int lastSelectedItem = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity
                     setIcon(R.drawable.ic_folder_open_black_24dp).setCheckable(true);
             PasswordSingleton.getInstance().getDirectories().put(str.substring(0,str.indexOf(".key")), str);
         }
+
+        if (selectedItem>=0)
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
     }
 
     @Override
@@ -106,8 +109,6 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            selectedItem = 0;
-            lastSelectedItem = 0;
             Intent intent = new Intent(this, SettignsActivity.class);
             startActivity(intent);
             return true;
@@ -121,7 +122,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
+        if (selectedItem >=0 )
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
         lastSelectedItem = selectedItem;
         selectedItem = item.getOrder();
 
@@ -152,8 +154,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onWrongPassword() {
-        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
-        navigationView.getMenu().getItem(0).getSubMenu().getItem(lastSelectedItem).setChecked(false);
+        if (selectedItem >=0)
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(false);
+        if (lastSelectedItem >=0)
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(lastSelectedItem).setChecked(false);
+        selectedItem = -1;
+        lastSelectedItem = -1;
     }
 
     @Override
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMasterPasswordDialogNegativeClick(String password) {
         selectedItem = lastSelectedItem;
-        navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
+        if (selectedItem >= 0)
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(selectedItem).setChecked(true);
     }
 }

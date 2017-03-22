@@ -23,6 +23,10 @@ public class Password {
         this.observation = observation;
     }
 
+    public Password() {
+        //empty
+    }
+
     public String getDescription() {
         return description;
     }

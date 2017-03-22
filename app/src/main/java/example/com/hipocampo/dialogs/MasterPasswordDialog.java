@@ -52,11 +52,11 @@ public class MasterPasswordDialog extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity) {
+        if (context instanceof OnMasterPasswordDialogListener) {
             mListener = (MasterPasswordDialog.OnMasterPasswordDialogListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnMasterPasswordDialogListener");
         }
     }
 

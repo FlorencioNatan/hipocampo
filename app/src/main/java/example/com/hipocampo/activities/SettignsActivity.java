@@ -1,26 +1,38 @@
 package example.com.hipocampo.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import example.com.hipocampo.R;
+import example.com.hipocampo.dialogs.MasterPasswordDialog;
+import example.com.hipocampo.model.Password;
 import example.com.hipocampo.util.FileManager;
+import example.com.hipocampo.util.ImportSeahorseFile;
+import example.com.hipocampo.util.PasswordSingleton;
 
-public class SettignsActivity extends AppCompatActivity {
+public class SettignsActivity extends AppCompatActivity
+        implements MasterPasswordDialog.OnMasterPasswordDialogListener {
 
     private List<Folder> mItems = new ArrayList<Folder>();
     private MyFolderRecyclerViewAdapter adapter;
+
+    private int IMPORT_FILE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,40 @@ public class SettignsActivity extends AppCompatActivity {
 
         adapter = new MyFolderRecyclerViewAdapter(mItems, this);
         recyclerView.setAdapter(adapter);
+
+        Button btImport = (Button) findViewById(R.id.btImport);
+        btImport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+                fileintent.setType("*/*");
+                try {
+                    startActivityForResult(fileintent, IMPORT_FILE);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IMPORT_FILE && resultCode == RESULT_OK) {
+            try {
+                ImportSeahorseFile isf = new ImportSeahorseFile(getContentResolver().openInputStream(data.getData()));
+                PasswordSingleton.getInstance().setPasswordList(isf.importFile());
+                PasswordSingleton.getInstance().getDirectories().put(isf.getFileName(), isf.getFileName()+".key");
+                PasswordSingleton.getInstance().setCurrentFolder(isf.getFileName());
+                new Handler().post(new Runnable() {
+                    public void run() {
+                        MasterPasswordDialog dialog = new MasterPasswordDialog();
+                        dialog.show(getSupportFragmentManager(), "Master Password Dialog");
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     protected void onFolderListDeleteInteraction(Folder item){
@@ -53,6 +99,19 @@ public class SettignsActivity extends AppCompatActivity {
             mItems.get(i-1).id = i;
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMasterPasswordDialogPositiveClick(String password) {
+        PasswordSingleton.getInstance().setMasterPassword(password);
+        FileManager fileManager = new FileManager(this);
+        fileManager.createFile();
+        fileManager.writeFile(PasswordSingleton.getInstance().toString());
+    }
+
+    @Override
+    public void onMasterPasswordDialogNegativeClick(String password) {
+        //TODO
     }
 
     private static class Folder {

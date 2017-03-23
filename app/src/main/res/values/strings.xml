@@ -22,5 +22,6 @@
     <string name="master_password_error_dialog_title">Senha Incorreta</string>
     <string name="master_password_error_dialog_message">A senha informada é incorreta!</string>
     <string name="folder_name_dialog_title">Nome da pasta</string>
+    <string name="import_password_file">Importar arquivo de senhas!</string>
 
 </resources>
